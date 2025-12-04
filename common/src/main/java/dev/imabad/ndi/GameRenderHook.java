@@ -2,7 +2,6 @@ package dev.imabad.ndi;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -10,8 +9,8 @@ import dev.imabad.ndi.threads.NDIControlThread;
 import dev.imabad.ndi.threads.NDIThread;
 import me.walkerknapp.devolay.DevolayMetadataFrame;
 import me.walkerknapp.devolay.DevolaySender;
-import net.minecraft.Util;
 import net.minecraft.client.CameraType;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -63,7 +62,7 @@ public class GameRenderHook {
         entity.zo = lastTickPos.z;
     }
 
-    public void render(RenderTarget framebuffer, Window window, Player player, float tickDelta, boolean isPaused){
+    public void render(RenderTarget framebuffer, Window window, Player player, DeltaTracker deltaTracker, boolean isPaused){
         boolean hasResChanged = false;
         if(mainOutput == null){
             pboManager = new PBOManager(window.getScreenWidth(), window.getScreenHeight());
@@ -164,9 +163,10 @@ public class GameRenderHook {
                     PBOManager entityBytes = entityBuffers.get(e.getUUID());;
                     minecraftClient.cameraEntity = e;
                     CameraExt.from(minecraftClient.gameRenderer.getMainCamera()).setCameraY(e.getEyeHeight());
-//                    minecraftClient.gameRenderer.getCamera().updateEyeHeight();
-                    minecraftClient.gameRenderer.renderLevel(tickDelta, Util.getNanos(), new PoseStack());
-//                    minecraftClient.gameRenderer.getCamera().updateEyeHeight();
+                    
+                    // UPDATED: Use DeltaTracker for 1.21 renderLevel
+                    minecraftClient.gameRenderer.renderLevel(deltaTracker);
+                    
                     entityBytes.readPixelData(entityFramebuffer);
                     NDIMod.getCameraManager().cameras.get(e.getUUID()).setByteBuffer(entityBytes.buffer);
                     CameraExt.from(minecraftClient.gameRenderer.getMainCamera()).setCameraY(prevCameraY);
@@ -179,7 +179,6 @@ public class GameRenderHook {
                 oldWindow.bindWrite(true);
 
                 minecraftClient.cameraEntity = oldCam;
-//                minecraftClient.gameRenderer.getCamera().updateEyeHeight();
                 minecraftClient.options.hideGui = oldHudHidden;
                 minecraftClient.options.setCameraType(perspective);
             }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
 import dev.imabad.ndi.MinecraftClientExt;
 import dev.imabad.ndi.NDIMod;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -30,7 +31,8 @@ public abstract class MinecraftClientMixin implements MinecraftClientExt {
     private RenderTarget mainRenderTarget;
     @Shadow @Final private Window window;
 
-    @Shadow public abstract float getDeltaFrameTime();
+    // UPDATED: Shadow getTimer to access DeltaTracker
+    @Shadow public abstract DeltaTracker getTimer();
 
     @Shadow public LocalPlayer player;
 
@@ -49,7 +51,8 @@ public abstract class MinecraftClientMixin implements MinecraftClientExt {
     @Inject(method = "runTick(Z)V", at=@At("RETURN"))
     public void runTick(boolean tick, CallbackInfo info) {
         if(NDIMod.getGameRenderHook() != null) {
-            NDIMod.getGameRenderHook().render(mainRenderTarget, window, player, getDeltaFrameTime(), pause);
+            // UPDATED: Pass the DeltaTracker (getTimer()) to the render hook
+            NDIMod.getGameRenderHook().render(mainRenderTarget, window, player, getTimer(), pause);
         }
     }
 

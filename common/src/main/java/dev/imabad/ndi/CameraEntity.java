@@ -17,6 +17,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
+
 public class CameraEntity extends RemotePlayer {
 
     private float zoom = 0;
@@ -24,9 +25,10 @@ public class CameraEntity extends RemotePlayer {
     private Component name;
 
     public CameraEntity(ClientLevel clientWorld, GameProfile gameProfile) {
-        super(clientWorld, gameProfile);
-        name = Component.literal(getStringUUID());
-    }
+            // 1.21 RemotePlayer constructor usually matches (ClientLevel, GameProfile)
+            super(clientWorld, gameProfile);
+            name = Component.literal(getStringUUID());
+        }
 
     public float getZoom() {
         return zoom;

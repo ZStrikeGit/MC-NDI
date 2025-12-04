@@ -1,0 +1,57 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.0-beta.1' // Check for latest version
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+archivesBaseName = "${mod_id}-neoforge-${minecraft_version}"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neoforge_version
+
+    parchment {
+        mappingsVersion = '1.21-2024.06.23-1.21'
+        minecraftVersion = '1.21'
+    }
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            programArgument '--nogui'
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
+dependencies {
+    implementation project(":Common")
+    shade 'me.walkerknapp:devolay:2.1.0'
+}
+
+shadowJar {
+    archiveClassifier = ''
+    configurations = [project.configurations.shade]
+}
+
+tasks.named('build').configure {
+    dependsOn shadowJar
+}

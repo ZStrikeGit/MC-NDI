@@ -1,0 +1,27 @@
+modLoader = "neoforge"
+loaderVersion = "[4,)"
+license = "GNU GPLv3"
+issueTrackerURL = "https://github.com/Rushmead/MC-NDI/issues"
+
+[[mods]]
+modId = "mcndi"
+version = "${version}"
+displayName = "MC NDI"
+authors = "Rushmead"
+description = '''
+This mod adds NDI to Minecraft.
+'''
+
+[[dependencies.mcndi]]
+    modId = "neoforge"
+    type = "required"
+    versionRange = "[21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
+
+[[dependencies.mcndi]]
+    modId = "minecraft"
+    type = "required"
+    versionRange = "[1.21.1,)"
+    ordering = "NONE"
+    side = "BOTH"
