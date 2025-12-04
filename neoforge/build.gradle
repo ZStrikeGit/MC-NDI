@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
-    id 'net.neoforged.moddev' version '2.0.0-beta.1' // Check for latest version
+    // Updated to a stable version of ModDevGradle
+    id 'net.neoforged.moddev' version '2.0.75' 
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 

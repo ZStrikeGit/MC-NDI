@@ -17,6 +17,5 @@ pluginManagement {
 }
 
 rootProject.name = 'MCNDI'
-// Rename your 'forge' folder to 'neoforge'
-include("Common", "neoforge") 
+include("Common", "neoforge")
 project(":neoforge").projectDir = file("neoforge")
